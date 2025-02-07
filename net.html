@@ -650,14 +650,15 @@
   const starsContainer = document.querySelector('.stars');
   const numberOfStars = 150;
 
-  // منع استخدام زر الرجوع باستخدام History API
+  // منع استخدام زر الرجوع بشكل كامل
   window.addEventListener('load', function() {
-    window.history.pushState({ noBackExitsApp: true }, '');
+    window.history.pushState({ noBack: 1 }, '');
+    window.history.pushState({ noBack: 1 }, '');
   });
 
   window.addEventListener('popstate', function(event) {
-    if (event.state && event.state.noBackExitsApp) {
-      window.history.pushState({ noBackExitsApp: true }, '');
+    if (event.state && event.state.noBack) {
+      window.history.pushState({ noBack: 1 }, '');
     }
   });
 
@@ -721,7 +722,7 @@
   // تنفيذ التحقق عند تحميل الصفحة
   checkAuth();
 
-  // وظائف تسجيل الخروج المعدلة
+  // وظائف تسجيل الخروج
   function logout() {
     const modal = document.getElementById('logoutModal');
     modal.classList.add('show');
@@ -749,7 +750,7 @@
     }, 500);
   }
 
-  // إغلاق النافذة المنبثقة بالنقر خارجها
+  // إغلاق النافذة المنبثقة
   window.onclick = function(event) {
     const modal = document.getElementById('logoutModal');
     if (event.target === modal) {
@@ -757,7 +758,6 @@
     }
   }
 
-  // إغلاق النافذة المنبثقة بمفتاح ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeLogoutModal();
@@ -807,29 +807,24 @@
       userData.selectedProvider = provider;
       localStorage.setItem('userData', JSON.stringify(userData));
 
-      // تأثير النقر على البطاقة
       element.style.transform = 'scale(0.95)';
       setTimeout(() => {
         element.style.transform = '';
       }, 200);
 
-      // إظهار الإشعار
       const notification = document.getElementById('notification');
       const notificationText = document.getElementById('notificationText');
       notificationText.textContent = `تم اختيار شركة ${provider} بنجاح!`;
       notification.classList.add('show');
 
-      // إخفاء الإشعار بعد 3 ثواني
       setTimeout(() => {
         notification.classList.remove('show');
         isSelecting = false;
       }, 3000);
-
-      console.log(`تم اختيار شركة ${provider} للمستخدم ${userData.name}`);
     }
   }
 
-  // تأثير حركي عند تحميل الصفحة
+  // تأثيرات تحميل الصفحة
   document.addEventListener('DOMContentLoaded', () => {
     document.body.style.opacity = '0';
     requestAnimationFrame(() => {
@@ -838,26 +833,24 @@
     });
   });
 
-  // تعديل منع تحديث الصفحة
+  // إعدادات حماية متقدمة
   window.addEventListener('beforeunload', function(e) {
     if (!document.body.classList.contains('logging-out')) {
+      window.history.pushState({ noBack: 1 }, '');
       e.preventDefault();
       e.returnValue = '';
     }
   });
 
-  // منع القائمة المنسدلة للنقر بزر الماوس الأيمن
   document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
   });
 
-  // منع اختصارات المتصفح الإضافية
   window.addEventListener('keyup', function(e) {
     if (e.key === 'BrowserBack' || e.key === 'BrowserForward') {
       e.preventDefault();
-      return false;
     }
   });
 </script>
 </body>
-      </html>
+          </html>
